@@ -53,24 +53,21 @@ class HomeScreen:
             self.background_photo = ImageTk.PhotoImage(self.background_image)
         except FileNotFoundError:
             print("Error: background.jpeg not found.")
-            return  # Exit if image not found
+            return  
 
-        # Create canvas for background image
-        self.canvas = tk.Canvas(self.root, width=self.background_photo.width(), height=self.background_photo.height())
+
+        self.canvas = tk.Canvas(self.root, width=self.root.winfo_width(), height=self.root.winfo_height())
         self.canvas.create_image(0, 0, image=self.background_photo, anchor="nw")
         self.canvas.image = self.background_photo  # Keep a reference
         self.canvas.pack(fill="both", expand=True)
 
-        # Title Label on top of the canvas
         title_label = tk.Label(self.root, text="Welcome to Sign Bridge!", font=("Arial", 18), bd=0, bg="white", fg="black", highlightthickness=0)
         title_label.place(relx=0.5, rely=0.1, anchor="center")
 
-        # Buttons on top of the canvas
         learn = tk.Button(self.root, text="Learn", font=("Arial", 14), width=20, fg="black", bg="white", highlightthickness=0, highlightbackground="#ffffff", command=self.learn)
         multiple_choice = tk.Button(self.root, text="Multiple Choice", font=("Arial", 14), bd=0, width=20, fg="black", bg="white", highlightthickness=0, highlightbackground="#ffffff", command=self.multiple_choice)
         webcam_quiz = tk.Button(self.root, text="Webcam Quiz", font=("Arial", 14), bd=0, width=20, fg="black", bg="white", highlightthickness=0, highlightbackground="#ffffff", highlightcolor="#5BE1C7", command=self.webcam_quiz)
 
-        # Position buttons using place() to avoid overlap
         learn.place(relx=0.5, rely=0.4, anchor="center")
         multiple_choice.place(relx=0.5, rely=0.5, anchor="center")
         webcam_quiz.place(relx=0.5, rely=0.6, anchor="center")
@@ -226,8 +223,13 @@ class MultipleChoice:
         self.initialize()
 
     def initialize(self):
+        self.root.title("Multiple Choice - Sign Bridge")
+        self.root.attributes('-fullscreen', True)
+        self.root.configure(bg="#EFEAF0")
+        self.root.bind("<Escape>", self.exit_fullscreen)
+
+
         self.image_folder = "images/alphabetsQuiz"
-        self.root.configure(bg="white")
         self.image_files = [f for f in os.listdir(self.image_folder) if os.path.isfile(os.path.join(self.image_folder, f))]
 
         self.ask_question()
@@ -236,6 +238,7 @@ class MultipleChoice:
                                 command=lambda: self.back_func(self.root))
         back_button.place(x=10, y=10)
 
+
     def ask_question(self):
         self.clear_widgets()
 
@@ -243,7 +246,7 @@ class MultipleChoice:
         image_path = os.path.join(self.image_folder, random_image_file)
 
         self.image = Image.open(image_path)
-        self.image.thumbnail((300, 300))  # Adjust the maximum thumbnail size as desired
+        self.image.thumbnail((300, 300)) 
         self.photo = ImageTk.PhotoImage(self.image)
 
         image_label = tk.Label(self.root, image=self.photo, bd=0, highlightthickness=0, bg="white")
@@ -304,6 +307,9 @@ class MultipleChoice:
     def clear_widgets(self):
         for widget in self.root.winfo_children():
             widget.pack_forget()
+
+    def exit_fullscreen(self, event=None):
+        self.root.attributes("-fullscreen", False)
 
 
 
@@ -489,14 +495,11 @@ class WebcamQuiz:
             cv2.imshow('frame', frame)
             cv2.waitKey(1)
 
-    
 
-    
-    
 
 root = tk.Tk()
 root.geometry("800x600")
-root.configure(bg="white")
 home = HomeScreen(root)
+
 
 root.mainloop()
