@@ -47,17 +47,33 @@ class HomeScreen:
         self.root.attributes('-fullscreen', True)
         self.root.bind("<Escape>", self.exit_fullscreen)
 
-        title_label = tk.Label(self.root, text="Welcome to Sign Bridge!", font=("Arial", 18), bd=0, bg="white", fg="black", highlightthickness=0)
-        title_label.pack(pady=100)
+        # Load background image
+        try:
+            self.background_image = Image.open("background.jpeg")  # Replace with your image file
+            self.background_photo = ImageTk.PhotoImage(self.background_image)
+        except FileNotFoundError:
+            print("Error: background.jpeg not found.")
+            return  # Exit if image not found
 
+        # Create canvas for background image
+        self.canvas = tk.Canvas(self.root, width=self.background_photo.width(), height=self.background_photo.height())
+        self.canvas.create_image(0, 0, image=self.background_photo, anchor="nw")
+        self.canvas.image = self.background_photo  # Keep a reference
+        self.canvas.pack(fill="both", expand=True)
+
+        # Title Label on top of the canvas
+        title_label = tk.Label(self.root, text="Welcome to Sign Bridge!", font=("Arial", 18), bd=0, bg="white", fg="black", highlightthickness=0)
+        title_label.place(relx=0.5, rely=0.1, anchor="center")
+
+        # Buttons on top of the canvas
         learn = tk.Button(self.root, text="Learn", font=("Arial", 14), width=20, fg="black", bg="white", highlightthickness=0, highlightbackground="#ffffff", command=self.learn)
         multiple_choice = tk.Button(self.root, text="Multiple Choice", font=("Arial", 14), bd=0, width=20, fg="black", bg="white", highlightthickness=0, highlightbackground="#ffffff", command=self.multiple_choice)
         webcam_quiz = tk.Button(self.root, text="Webcam Quiz", font=("Arial", 14), bd=0, width=20, fg="black", bg="white", highlightthickness=0, highlightbackground="#ffffff", highlightcolor="#5BE1C7", command=self.webcam_quiz)
 
-
-        learn.pack()
-        multiple_choice.pack()
-        webcam_quiz.pack()
+        # Position buttons using place() to avoid overlap
+        learn.place(relx=0.5, rely=0.4, anchor="center")
+        multiple_choice.place(relx=0.5, rely=0.5, anchor="center")
+        webcam_quiz.place(relx=0.5, rely=0.6, anchor="center")
 
 
     def learn(self):
@@ -105,7 +121,25 @@ class Learning:
         self.initialize()
 
     def initialize(self):
-        self.root.configure(bg="white")
+        self.root.title("Learning - Sign Bridge")
+        self.root.attributes('-fullscreen', True)
+        self.root.bind("<Escape>", self.exit_fullscreen)
+
+        # Load background image
+        try:
+            self.background_image = Image.open("background.jpeg")  # Replace with your image file
+            self.background_photo = ImageTk.PhotoImage(self.background_image)
+        except FileNotFoundError:
+            print("Error: background.jpeg not found.")
+            return  # Exit if image not found
+
+        # Create canvas for background image
+        self.canvas = tk.Canvas(self.root, width=self.background_photo.width(), height=self.background_photo.height())
+        self.canvas.create_image(0, 0, image=self.background_photo, anchor="nw")
+        self.canvas.image = self.background_photo  # Keep a reference
+        self.canvas.pack(fill="both", expand=True)
+
+        # Initialize the learning content (alphabet images)
         self.image_folder = "images/alphabetsLearning"
         
         # Get sorted list of image files (ensuring alphabetical order)
@@ -117,13 +151,12 @@ class Learning:
         self.curr_index = 0  # Start from first letter
 
         # Label to display alphabet
-        self.alphabet_label = tk.Label(self.root, font=("Arial", 14), bd=0)
-        self.alphabet_label.pack(pady=50)
+        self.alphabet_label = tk.Label(self.root, font=("Arial", 14), bd=0, bg="white", fg="black", highlightthickness=0)
+        self.alphabet_label.place(relx=0.5, rely=0.1, anchor="center")
 
         # Image Label
         self.image_label = tk.Label(self.root, bd=0, highlightthickness=0, bg="white")
-        self.image_label.pack(pady=50)
-
+        self.image_label.place(relx=0.5, rely=0.4, anchor="center")
 
         # Back button
         self.back_button = tk.Button(self.root, text="Back", font=("Arial", 12), bd=0, width=10, fg="black", bg="white", highlightthickness=0, highlightbackground="#ffffff",
@@ -140,6 +173,7 @@ class Learning:
                                      command=self.next_image)
         self.next_button.place(x=450, y=10)
 
+        # Start the learning process
         self.learn()
 
     def learn(self):
@@ -180,6 +214,9 @@ class Learning:
         """Enable/Disable navigation buttons based on position"""
         self.prev_button.config(state=tk.NORMAL if self.curr_index > 0 else tk.DISABLED)
         self.next_button.config(state=tk.NORMAL if self.curr_index < len(self.image_files) - 1 else tk.DISABLED)
+
+    def exit_fullscreen(self, event=None):
+        self.root.attributes("-fullscreen", False)
 
 
 class MultipleChoice:
