@@ -45,31 +45,26 @@ class HomeScreen:
     def initialize(self):
         self.root.title("Welcome to Sign Bridge")
         self.root.attributes('-fullscreen', True)
-        self.root.configure(bg="white")
         self.root.bind("<Escape>", self.exit_fullscreen)
 
-        title_label = tk.Label(self.root, text="Welcome to Sign Bridge!", font=("Arial", 18), bd=0)
+        title_label = tk.Label(self.root, text="Welcome to Sign Bridge!", font=("Arial", 18), bd=0, bg="white", fg="black", highlightthickness=0)
         title_label.pack(pady=100)
 
-        learn = tk.Button(self.root, text="Learn", font=("Arial", 14), bd=0, width=20, relief="flat", highlightthickness=0, highlightbackground="#ffffff", highlightcolor="#ffffff", command=self.learn)
-        multiple_choice = tk.Button(self.root, text="Multiple Choice", font=("Arial", 14), bd=0, width=20, relief="flat", highlightthickness=0, highlightbackground="#ffffff", highlightcolor="#ffffff", command=self.multiple_choice)
-        webcam_quiz = tk.Button(self.root, text="Webcam Quiz", font=("Arial", 14), bd=0, width=20, relief="flat", highlightthickness=0, highlightbackground="#ffffff", highlightcolor="#ffffff", command=self.webcam_quiz)
-        
-        # sign_to_text = tk.Button(self.root, text="Sign to Text", font=("Arial", 14), bd=0, width=20,
-        #                            command=self.sign_to_text)
+        learn = tk.Button(self.root, text="Learn", font=("Arial", 14), width=20, fg="black", bg="white", highlightthickness=0, highlightbackground="#ffffff", command=self.learn)
+        multiple_choice = tk.Button(self.root, text="Multiple Choice", font=("Arial", 14), bd=0, width=20, fg="black", bg="white", highlightthickness=0, highlightbackground="#ffffff", command=self.multiple_choice)
+        webcam_quiz = tk.Button(self.root, text="Webcam Quiz", font=("Arial", 14), bd=0, width=20, fg="black", bg="white", highlightthickness=0, highlightbackground="#ffffff", highlightcolor="#5BE1C7", command=self.webcam_quiz)
 
 
         learn.pack()
         multiple_choice.pack()
         webcam_quiz.pack()
-        # sign_to_text.pack()
+
 
     def learn(self):
         self.root.withdraw()
         learn_window = tk.Toplevel(self.root)
         learn_window.title("Learn Alphabets")
         learn_window.attributes('-fullscreen', True) 
-        self.root.configure(bg="white")
         learn_window.bind("<Escape>", lambda event: learn_window.attributes('-fullscreen', False))
 
         Learning(learn_window, self.back_to_home)
@@ -79,7 +74,6 @@ class HomeScreen:
         quiz_window = tk.Toplevel(self.root)
         quiz_window.title("Alphabet Quiz")
         quiz_window.attributes('-fullscreen', True)
-        self.root.configure(bg="white")
         quiz_window.bind("<Escape>", lambda event: quiz_window.attributes('-fullscreen', False))
 
         MultipleChoice(quiz_window, self.back_to_home)
@@ -92,14 +86,7 @@ class HomeScreen:
         quiz_window.bind("<Escape>", lambda event: quiz_window.attributes('-fullscreen', False))
         WebcamQuiz(quiz_window, self.back_to_home)
 
-    
-    # def sign_to_text(self):
-    #     self.root.withdraw()
-    #     stt_window = tk.Toplevel(self.root)
-    #     stt_window.title("Translate Sign Language into Text")
-    #     stt_window.geometry("500x800")
 
-    #     SignToText(stt_window, self.back_to_home)
 
     def back_to_home(self, learn_window):
         learn_window.destroy()
@@ -134,35 +121,35 @@ class Learning:
         self.alphabet_label.pack(pady=50)
 
         # Image Label
-        self.image_label = tk.Label(self.root, bd=0, highlightthickness=0)
+        self.image_label = tk.Label(self.root, bd=0, highlightthickness=0, bg="white")
         self.image_label.pack(pady=50)
 
+
         # Back button
-        self.back_button = tk.Button(self.root, text="Back", font=("Arial", 12), bd=0, width=10,
+        self.back_button = tk.Button(self.root, text="Back", font=("Arial", 12), bd=0, width=10, fg="black", bg="white", highlightthickness=0, highlightbackground="#ffffff",
                                      command=lambda: self.back_func(self.root))
         self.back_button.place(x=10, y=10)
 
         # Previous button
-        self.prev_button = tk.Button(self.root, text="Previous", font=("Arial", 12), bd=0, width=10,
+        self.prev_button = tk.Button(self.root, text="Previous", font=("Arial", 12), bd=0, width=10, fg="black", bg="white", highlightthickness=0, highlightbackground="#ffffff",
                                      command=self.previous_image)
         self.prev_button.place(x=300, y=10)
 
         # Next button
-        self.next_button = tk.Button(self.root, text="Next", font=("Arial", 12), bd=0, width=10,
+        self.next_button = tk.Button(self.root, text="Next", font=("Arial", 12), bd=0, width=10, fg="black", bg="white", highlightthickness=0, highlightbackground="#ffffff",
                                      command=self.next_image)
         self.next_button.place(x=450, y=10)
 
         self.learn()
 
     def learn(self):
-        """Display the current alphabet image"""
         # Get current image
         image_file = self.image_files[self.curr_index]
         image_path = os.path.join(self.image_folder, image_file)
 
         # Extract alphabet from filename
         alphabet = image_file.split(".")[0].upper()
-        self.alphabet_label.config(text=f"This sign indicates the letter {alphabet} in ASL")
+        self.alphabet_label.config(text=f"This sign indicates the letter {alphabet} in ASL", bg="white", fg="black", highlightthickness=0)
 
         try:
             self.image = Image.open(image_path)
@@ -208,7 +195,7 @@ class MultipleChoice:
 
         self.ask_question()
 
-        back_button = tk.Button(self.root, text="Back", font=("Arial", 12), bd=0, width=10,
+        back_button = tk.Button(self.root, text="Back", font=("Arial", 12), bd=0, width=10, bg="white", fg="black", highlightthickness=0, highlightbackground="white",
                                 command=lambda: self.back_func(self.root))
         back_button.place(x=10, y=10)
 
@@ -222,13 +209,13 @@ class MultipleChoice:
         self.image.thumbnail((300, 300))  # Adjust the maximum thumbnail size as desired
         self.photo = ImageTk.PhotoImage(self.image)
 
-        image_label = tk.Label(self.root, image=self.photo, bd=0, highlightthickness=0)
+        image_label = tk.Label(self.root, image=self.photo, bd=0, highlightthickness=0, bg="white")
         image_label.pack(pady=50) 
 
         correct_answer = random_image_file.split(".")[0].upper()  
 
         question_text = "Which alphabet does this hand sign indicate?"
-        question_label = tk.Label(self.root, text=question_text, font=("Arial", 14), bd=0)
+        question_label = tk.Label(self.root, text=question_text, font=("Arial", 14), bd=0, bg="white", fg="black")
         question_label.pack(pady=10)
 
         answers = [correct_answer]
@@ -239,8 +226,8 @@ class MultipleChoice:
 
         self.answer_buttons = []
         for answer in answers:
-            button = tk.Button(self.root, text=answer, font=("Arial", 12), width=20, bd=0, highlightthickness=0,
-                               highlightbackground="#B8E2F2")
+            button = tk.Button(self.root, text=answer, font=("Arial", 12), width=20, bd=0, highlightthickness=0, bg="#5BE1C7",
+                               highlightbackground="white")
             button.pack(pady=10)  
             button.config(command=lambda ans=answer: self.check_answer(ans, correct_answer))
             self.answer_buttons.append(button)
@@ -263,13 +250,13 @@ class MultipleChoice:
         else:
             result_text = "Incorrect! The correct answer was " + correct_answer + "."
 
-        result_label = tk.Label(self.root, text=result_text, font=("Arial", 14), bd=0)
+        result_label = tk.Label(self.root, text=result_text, font=("Arial", 14), bd=0, bg="white", fg="black", highlightthickness=0)
         result_label.pack(pady=10)
 
         self.root.after(2000, self.display_next_question_button)
 
     def display_next_question_button(self):
-        next_button = tk.Button(self.root, text="Next Question", font=("Arial", 12), bd=0, width=20,
+        next_button = tk.Button(self.root, text="Next Question", font=("Arial", 12), bd=0, width=20, bg="white", fg="black", highlightbackground="white",
                                 command=self.ask_question, highlightthickness=0)
         next_button.pack(pady=10)
 
@@ -465,140 +452,7 @@ class WebcamQuiz:
             cv2.imshow('frame', frame)
             cv2.waitKey(1)
 
-        
     
-
-# class SignToText:
-#     def __init__(self, root, back_func):
-#         self.root = root
-#         self.back_func = back_func
-#         self.initialize()
-    
-#     def initialize(self):
-#         self.translate()
-#         back_button = tk.Button(self.root, text="Back", font=("Arial", 12), bd=0, width=10,
-#                                 command=lambda: self.back_func(self.root))
-#         back_button.place(x=10, y=10)
-    
-#     def translate(self):
-#         self.clear_widgets()
-#         start_time = time.time()
-#         result = ""
-#         data_dict = pickle.load(open('./data/data.pickle', 'rb'))
-#         data = np.asarray(data_dict['data'])
-#         labels = np.asarray(data_dict['labels'])
-#         x_train, x_test, y_train, y_test = train_test_split(data, labels, test_size=0.2, shuffle=True, stratify=labels)
-#         model = RandomForestClassifier()
-#         model.fit(x_train, y_train)
-#         y_predict = model.predict(x_test)
-#         model_dict = pickle.load(open('./data/model.p', 'rb'))
-#         model = model_dict['model']
-
-#         # Change to 0, 1, or 2 if error occurs
-#         cap = cv2.VideoCapture(0)
-
-
-#         mp_hands = mp.solutions.hands
-#         mp_drawing = mp.solutions.drawing_utils
-#         mp_drawing_styles = mp.solutions.drawing_styles
-
-#         hands = mp_hands.Hands(static_image_mode=True, min_detection_confidence=0.3)
-
-#         labels_dict = {0: 'A', 1: 'B', 2: 'C', 3: 'D', 4: 'E', 5: 'F', 6: 'G', 7: 'H', 
-#                     8: 'I', 9: 'J', 10: 'K', 11: 'L', 12: 'M', 13: 'N', 14: 'O', 15: 'P', 16: 'Q', 17: 'R', 18: 'S', 19: 'T', 20: 'U', 21: 'V', 22: 'W', 23: 'X', 24: 'Y', 25: 'Z'}
-#         while True:
-
-#             elapsed_time = time.time() - start_time
-
-#             data_aux = []
-#             x_ = []
-#             y_ = []
-
-#             ret, frame = cap.read()
-
-#             H, W, _ = frame.shape
-
-#             frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-
-#             results = hands.process(frame_rgb)
-#             if results.multi_hand_landmarks:
-#                 for hand_landmarks in results.multi_hand_landmarks:
-#                     mp_drawing.draw_landmarks(
-#                         frame,  # image to draw
-#                         hand_landmarks,  # model output
-#                         mp_hands.HAND_CONNECTIONS,  # hand connections
-#                         mp_drawing_styles.get_default_hand_landmarks_style(),
-#                         mp_drawing_styles.get_default_hand_connections_style())
-
-#                 for hand_landmarks in results.multi_hand_landmarks:
-#                     for i in range(len(hand_landmarks.landmark)):
-#                         x = hand_landmarks.landmark[i].x
-#                         y = hand_landmarks.landmark[i].y
-
-#                         x_.append(x)
-#                         y_.append(y)
-
-#                     for i in range(len(hand_landmarks.landmark)):
-#                         x = hand_landmarks.landmark[i].x
-#                         y = hand_landmarks.landmark[i].y
-#                         data_aux.append(x - min(x_))
-#                         data_aux.append(y - min(y_))
-
-#                 x1 = int(min(x_) * W) - 10
-#                 y1 = int(min(y_) * H) - 10
-
-#                 x2 = int(max(x_) * W) - 10
-#                 y2 = int(max(y_) * H) - 10
-
-#                 prediction = model.predict([np.asarray(data_aux)])
-
-#                 predicted_character = labels_dict[int(prediction[0])]
-
-
-#                 cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 0), 4)
-#                 cv2.putText(frame, predicted_character, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 1.3, (0, 0, 0), 3,
-#                             cv2.LINE_AA)
-            
-                
-#                 if elapsed_time >= 2:
-#                     result += predicted_character
-#                     start_time = time.time()
-
-#                 elif elapsed_time < 2:
-#                     result += " "
-#                     start_time = time.time()
-                
-#             display_frame = frame.copy()
-                
-#             # prints the result of accumulated letters, but adjust the location
-#             cv2.putText(display_frame, result, (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1.3, (51, 255, 255), 3,
-#                     cv2.LINE_AA)
-            
-            
-#             cv2.imshow('frame', display_frame)
-#             cv2.waitKey(1)
-
-#             # clear the data for the next iteration
-#             data_aux.clear()
-#             x_.clear()
-#             y_.clear()
-        
-#             cap.release()
-#             cv2.destroyAllWindows()
-
-#     def perform_translation(self):
-#         # Get the text from the entry field
-#         text = self.gesture_entry.get()
-
-#         # Implement translation logic here
-
-#         # Display the translated text
-#         # translation_label = tk.Label(self.root, text=translated_text, font=("Arial", 12), bd=0)
-#         # translation_label.pack(pady=10)
-
-#     def clear_widgets(self):
-#         for widget in self.root.winfo_children():
-#             widget.pack_forget()
 
     
     
