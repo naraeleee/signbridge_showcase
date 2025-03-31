@@ -16,7 +16,7 @@ Sign Bridge is an interactive sign language learning application that helps user
 ## Installation
 
 ### Prerequisites
-- Python 3.8 or higher
+- Python 3.10.16 or higher
 - macOS (M1/M2) or Windows
 - Webcam for real-time recognition
 
