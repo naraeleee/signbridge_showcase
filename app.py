@@ -51,7 +51,7 @@ class HomeScreen:
 
         # Background image
         try:
-            self.background_image = Image.open("images/background.jpeg")
+            self.background_image = Image.open("background.jpeg")
             self.background_photo = ImageTk.PhotoImage(self.background_image)
         except FileNotFoundError:
             print("Error: background.jpeg not found.")
