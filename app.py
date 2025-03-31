@@ -59,7 +59,7 @@ class HomeScreen:
 
         self.canvas = tk.Canvas(self.root, width=self.root.winfo_screenwidth(), height=self.root.winfo_screenheight())
         self.canvas.create_image(0, 0, image=self.background_photo, anchor="nw")
-        self.canvas.image = self.background_photo  # Keep a reference
+        self.canvas.image = self.background_photo
         self.canvas.pack(fill="both", expand=True)
 
         # Title Label
@@ -69,10 +69,10 @@ class HomeScreen:
         # Logo Image
         try:
             self.logo_image = Image.open("images/logo.png")
-            self.logo_image = self.logo_image.resize((200, 200), Image.LANCZOS)  # Use LANCZOS for better quality
-            self.logo_photo = ImageTk.PhotoImage(self.logo_image)  # Keep reference
+            self.logo_image = self.logo_image.resize((200, 200), Image.LANCZOS) 
+            self.logo_photo = ImageTk.PhotoImage(self.logo_image)
 
-            logo_label = tk.Label(self.root, image=self.logo_photo, bg="#60A4AC")  # Use self.root instead of root
+            logo_label = tk.Label(self.root, image=self.logo_photo, bg="#60A4AC") 
             logo_label.place(relx=0.5, rely=0.2, anchor="center")
 
         except FileNotFoundError:
