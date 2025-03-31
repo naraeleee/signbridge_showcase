@@ -13,7 +13,7 @@ from PIL import Image, ImageTk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 
-# Model 
+# Load the model
 data_dict = pickle.load(open('./data/data.pickle', 'rb'))
 
 data = np.asarray(data_dict['data'])
@@ -47,30 +47,45 @@ class HomeScreen:
         self.root.attributes('-fullscreen', True)
         self.root.bind("<Escape>", self.exit_fullscreen)
 
-        # Load background image
+        self.root.update_idletasks()
+
+        # Background image
         try:
-            self.background_image = Image.open("background.jpeg")  # Replace with your image file
+            self.background_image = Image.open("background.jpeg")
             self.background_photo = ImageTk.PhotoImage(self.background_image)
         except FileNotFoundError:
             print("Error: background.jpeg not found.")
             return  
 
-
-        self.canvas = tk.Canvas(self.root, width=self.root.winfo_width(), height=self.root.winfo_height())
+        self.canvas = tk.Canvas(self.root, width=self.root.winfo_screenwidth(), height=self.root.winfo_screenheight())
         self.canvas.create_image(0, 0, image=self.background_photo, anchor="nw")
         self.canvas.image = self.background_photo  # Keep a reference
         self.canvas.pack(fill="both", expand=True)
 
-        title_label = tk.Label(self.root, text="Welcome to Sign Bridge!", font=("Arial", 18), bd=0, bg="white", fg="black", highlightthickness=0)
-        title_label.place(relx=0.5, rely=0.1, anchor="center")
+        # Title Label
+        title_label = tk.Label(self.root, text="Welcome to Sign Bridge!", font=("Arial", 20), bd=0, bg="white", fg="black", highlightthickness=0)
+        title_label.place(relx=0.5, rely=0.35, anchor="center")
 
-        learn = tk.Button(self.root, text="Learn", font=("Arial", 14), width=20, fg="black", bg="white", highlightthickness=0, highlightbackground="#ffffff", command=self.learn)
-        multiple_choice = tk.Button(self.root, text="Multiple Choice", font=("Arial", 14), bd=0, width=20, fg="black", bg="white", highlightthickness=0, highlightbackground="#ffffff", command=self.multiple_choice)
-        webcam_quiz = tk.Button(self.root, text="Webcam Quiz", font=("Arial", 14), bd=0, width=20, fg="black", bg="white", highlightthickness=0, highlightbackground="#ffffff", highlightcolor="#5BE1C7", command=self.webcam_quiz)
+        # Logo Image
+        try:
+            self.logo_image = Image.open("images/logo.png")
+            self.logo_image = self.logo_image.resize((200, 200), Image.LANCZOS)  # Use LANCZOS for better quality
+            self.logo_photo = ImageTk.PhotoImage(self.logo_image)  # Keep reference
 
-        learn.place(relx=0.5, rely=0.4, anchor="center")
-        multiple_choice.place(relx=0.5, rely=0.5, anchor="center")
-        webcam_quiz.place(relx=0.5, rely=0.6, anchor="center")
+            logo_label = tk.Label(self.root, image=self.logo_photo, bg="#60A4AC")  # Use self.root instead of root
+            logo_label.place(relx=0.5, rely=0.2, anchor="center")
+
+        except FileNotFoundError:
+            print("Error: logo.png not found.")
+
+        # Home Menu
+        learn = tk.Button(self.root, text="Learn Alphabets", font=("Arial", 25), width=20, fg="black", bg="white", highlightthickness=0, highlightbackground="#ffffff", command=self.learn)
+        multiple_choice = tk.Button(self.root, text="Multiple Choice", font=("Arial", 25), width=20, fg="black", bg="white", highlightthickness=0, highlightbackground="#ffffff", command=self.multiple_choice)
+        webcam_quiz = tk.Button(self.root, text="Webcam Quiz", font=("Arial", 25), width=20, fg="black", bg="white", highlightthickness=0, highlightbackground="#ffffff", command=self.webcam_quiz)
+
+        learn.place(relx=0.5, rely=0.45, anchor="center")
+        multiple_choice.place(relx=0.5, rely=0.55, anchor="center")
+        webcam_quiz.place(relx=0.5, rely=0.65, anchor="center")
 
 
     def learn(self):
@@ -122,32 +137,27 @@ class Learning:
         self.root.attributes('-fullscreen', True)
         self.root.bind("<Escape>", self.exit_fullscreen)
 
-        # Load background image
         try:
-            self.background_image = Image.open("background.jpeg")  # Replace with your image file
+            self.background_image = Image.open("background.jpeg")  
             self.background_photo = ImageTk.PhotoImage(self.background_image)
         except FileNotFoundError:
             print("Error: background.jpeg not found.")
-            return  # Exit if image not found
+            return  
 
-        # Create canvas for background image
         self.canvas = tk.Canvas(self.root, width=self.background_photo.width(), height=self.background_photo.height())
         self.canvas.create_image(0, 0, image=self.background_photo, anchor="nw")
-        self.canvas.image = self.background_photo  # Keep a reference
+        self.canvas.image = self.background_photo 
         self.canvas.pack(fill="both", expand=True)
 
-        # Initialize the learning content (alphabet images)
         self.image_folder = "images/alphabetsLearning"
         
-        # Get sorted list of image files (ensuring alphabetical order)
         self.image_files = sorted(
             [f for f in os.listdir(self.image_folder)
              if os.path.isfile(os.path.join(self.image_folder, f)) and not f.startswith('.')]
         )
 
-        self.curr_index = 0  # Start from first letter
+        self.curr_index = 0 
 
-        # Label to display alphabet
         self.alphabet_label = tk.Label(self.root, font=("Arial", 14), bd=0, bg="white", fg="black", highlightthickness=0)
         self.alphabet_label.place(relx=0.5, rely=0.1, anchor="center")
 
@@ -156,19 +166,19 @@ class Learning:
         self.image_label.place(relx=0.5, rely=0.4, anchor="center")
 
         # Back button
-        self.back_button = tk.Button(self.root, text="Back", font=("Arial", 12), bd=0, width=10, fg="black", bg="white", highlightthickness=0, highlightbackground="#ffffff",
+        self.back_button = tk.Button(self.root, text="Back", font=("Arial", 20), bd=0, width=10, fg="black", bg="white", highlightthickness=0, highlightbackground="#ffffff",
                                      command=lambda: self.back_func(self.root))
         self.back_button.place(x=10, y=10)
 
         # Previous button
-        self.prev_button = tk.Button(self.root, text="Previous", font=("Arial", 12), bd=0, width=10, fg="black", bg="white", highlightthickness=0, highlightbackground="#ffffff",
+        self.prev_button = tk.Button(self.root, text="Previous", font=("Arial", 20), bd=0, width=10, fg="black", bg="white", highlightthickness=0, highlightbackground="#ffffff",
                                      command=self.previous_image)
-        self.prev_button.place(x=300, y=10)
+        self.prev_button.place(x=540, y=10)
 
         # Next button
-        self.next_button = tk.Button(self.root, text="Next", font=("Arial", 12), bd=0, width=10, fg="black", bg="white", highlightthickness=0, highlightbackground="#ffffff",
+        self.next_button = tk.Button(self.root, text="Next", font=("Arial", 20), bd=0, width=10, fg="black", bg="white", highlightthickness=0, highlightbackground="#ffffff",
                                      command=self.next_image)
-        self.next_button.place(x=450, y=10)
+        self.next_button.place(x=700, y=10)
 
         # Start the learning process
         self.learn()
@@ -178,22 +188,24 @@ class Learning:
         image_file = self.image_files[self.curr_index]
         image_path = os.path.join(self.image_folder, image_file)
 
-        # Extract alphabet from filename
-        alphabet = image_file.split(".")[0].upper()
-        self.alphabet_label.config(text=f"This sign indicates the letter {alphabet} in ASL", bg="white", fg="black", highlightthickness=0)
-
         try:
             self.image = Image.open(image_path)
-            self.image.thumbnail((400, 400))  # Maintain aspect ratio
+            self.image.thumbnail((400, 400)) 
             self.photo = ImageTk.PhotoImage(self.image)
 
             self.image_label.config(image=self.photo)
-            self.image_label.image = self.photo  # Keep reference
+            self.image_label.image = self.photo
+
+            # Extract alphabet from filename
+            alphabet = image_file.split(".")[0].upper()
+            self.alphabet_label.config(text=f"This sign indicates the letter {alphabet} in ASL", bg="white", fg="black", highlightthickness=0, font=("Arial", 25))
+
 
         except Exception as ex:
             print(f"Error loading image: {ex}")
 
-        self.update_buttons()  # Ensure buttons are updated
+        self.update_buttons()
+
 
     def next_image(self):
         """Move to next letter if possible"""
@@ -225,7 +237,7 @@ class MultipleChoice:
     def initialize(self):
         self.root.title("Multiple Choice - Sign Bridge")
         self.root.attributes('-fullscreen', True)
-        self.root.configure(bg="#EFEAF0")
+        self.root.configure(bg="#A2C5CC")
         self.root.bind("<Escape>", self.exit_fullscreen)
 
 
@@ -242,7 +254,9 @@ class MultipleChoice:
     def ask_question(self):
         self.clear_widgets()
 
-        random_image_file = random.choice(self.image_files)
+        filtered_images = [img for img in self.image_files if img.split(".")[0].upper() != "M"]
+
+        random_image_file = random.choice(filtered_images)
         image_path = os.path.join(self.image_folder, random_image_file)
 
         self.image = Image.open(image_path)
@@ -255,7 +269,7 @@ class MultipleChoice:
         correct_answer = random_image_file.split(".")[0].upper()  
 
         question_text = "Which alphabet does this hand sign indicate?"
-        question_label = tk.Label(self.root, text=question_text, font=("Arial", 14), bd=0, bg="white", fg="black")
+        question_label = tk.Label(self.root, text=question_text, font=("Arial", 20), bd=0, bg="white", fg="black")
         question_label.pack(pady=10)
 
         answers = [correct_answer]
@@ -266,7 +280,7 @@ class MultipleChoice:
 
         self.answer_buttons = []
         for answer in answers:
-            button = tk.Button(self.root, text=answer, font=("Arial", 12), width=20, bd=0, highlightthickness=0, bg="#5BE1C7",
+            button = tk.Button(self.root, text=answer, font=("Arial", 25), width=20, bd=0, highlightthickness=0, bg="#5BE1C7",
                                highlightbackground="white")
             button.pack(pady=10)  
             button.config(command=lambda ans=answer: self.check_answer(ans, correct_answer))
@@ -290,13 +304,13 @@ class MultipleChoice:
         else:
             result_text = "Incorrect! The correct answer was " + correct_answer + "."
 
-        result_label = tk.Label(self.root, text=result_text, font=("Arial", 14), bd=0, bg="white", fg="black", highlightthickness=0)
+        result_label = tk.Label(self.root, text=result_text, font=("Arial", 20), bd=0, bg="white", fg="black", highlightthickness=0)
         result_label.pack(pady=10)
 
         self.root.after(2000, self.display_next_question_button)
 
     def display_next_question_button(self):
-        next_button = tk.Button(self.root, text="Next Question", font=("Arial", 12), bd=0, width=20, bg="white", fg="black", highlightbackground="white",
+        next_button = tk.Button(self.root, text="Next Question", font=("Arial", 20), bd=0, width=20, bg="white", fg="black", highlightbackground="white",
                                 command=self.ask_question, highlightthickness=0)
         next_button.pack(pady=10)
 
@@ -370,10 +384,9 @@ class WebcamQuiz:
         skipped = []
 
         while True:
-            # Initialize data_aux here
-            data_aux_left = []  # for the left hand
-            data_aux_right = []  # for the right hand
-            data_aux = []  # Initialize the main variable to store hand landmarks data
+            data_aux_left = []  # left hand
+            data_aux_right = []  # right hand
+            data_aux = []
             x_ = []
             y_ = []
 
@@ -400,7 +413,7 @@ class WebcamQuiz:
             frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
             results = hands.process(frame_rgb)
-            predicted_character = ""  # Initialize the predicted_character variable here
+            predicted_character = ""
 
             if results.multi_hand_landmarks:
                 for hand_landmarks in results.multi_hand_landmarks:
@@ -437,10 +450,9 @@ class WebcamQuiz:
                 x2 = int(max(x_) * W) - 10
                 y2 = int(max(y_) * H) - 10
 
-            # Make sure data_aux is always initialized before prediction
             if data_aux:
                 prediction = model.predict([np.asarray(data_aux)])
-                predicted_character = labels_dict[int(prediction[0])]  # Assign prediction to predicted_character
+                predicted_character = labels_dict[int(prediction[0])]
 
                 cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 0), 4)
                 cv2.putText(frame, predicted_character, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 1.3, (0, 0, 0), 3,
@@ -454,7 +466,6 @@ class WebcamQuiz:
             thickness = 2
             cv2.putText(frame, text, position, font, font_scale, font_color, thickness)
 
-            # Check only if predicted_character is assigned
             if predicted_character == current_alphabet and not correct_answer_displayed:
                     show_start_message = False
                     correct_answer_displayed = True
